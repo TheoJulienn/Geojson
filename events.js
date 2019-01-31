@@ -5,24 +5,68 @@ const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
 	  "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"
 	];
 
-var om;
-var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-        var icons = {
-          parking: {
-            name: 'Parking',
-            icon: iconBase + 'parking_lot_maps.png'
-          },
-          library: {
-            name: 'Library',
-            icon: iconBase + 'library_maps.png'
-          },
-          info: {
-            name: 'Info',
-            icon: iconBase + 'info-i_maps.png'
-          }
-        };
+var chargement_donnee = false;
 
-//<script src="https://cdn.rawgit.com/TheoJulienn/Geojson/master/events.js"></script>
+var om;
+
+var icons = {
+
+  Theatre: {
+    name: 'Theatre',
+    icon: 'https://img.icons8.com/color/48/000000/theatre-mask.png'
+  },
+  Cinema: {
+    name: 'Cinema',
+    icon: 'https://img.icons8.com/color/48/000000/documentary.png'
+  },
+  Concert: {
+    name: 'Concert/Musique',
+    icon: 'https://img.icons8.com/color/48/000000/saxophone.png'
+  },
+  Congres: {
+    name: 'Congres/Conference',
+    icon: 'https://img.icons8.com/color/48/000000/micro.png'
+  },
+  Famille: {
+    name: 'Famille',
+    icon: 'https://img.icons8.com/color/48/000000/family.png'
+  },
+  Atelier: {
+    name: 'Atelier',
+    icon: 'https://img.icons8.com/color/48/000000/drafting-compass2.png'
+  },
+  Culture: {
+    name: 'Culture',
+    icon: 'https://img.icons8.com/color/48/000000/books.png'
+  },
+  Formation: {
+    name: 'Formation',
+    icon: 'https://img.icons8.com/color/48/000000/classroom.png'
+  },
+  Religion: {
+    name: 'Religion',
+    icon: 'https://img.icons8.com/color/48/000000/cologne-cathedral.png'
+  },
+  Restau: {
+    name: 'Restau/Bar',
+    icon: 'https://img.icons8.com/color/48/000000/dining-room.png'
+  },
+  TV: {
+    name: 'TV',
+    icon: 'https://img.icons8.com/color/48/000000/retro-tv.png'
+  },
+  Sport: {
+    name: 'Sport',
+    icon: 'https://img.icons8.com/color/48/000000/rugby.png'
+  },
+  Sport: {
+    name: 'Vente',
+    icon: 'https://img.icons8.com/color/48/000000/cash-in-hand.png'
+  },
+
+};
+
+//<script src="https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/events.js"></script>
 
 /*Création de la carte définie par Google Maps*/
 function initMap() 
@@ -32,8 +76,202 @@ function initMap()
       zoom: 12,
       center: paris,
       mapTypeId : "roadmap",
-      disableDefaultUI: true
-    });
+      disableDefaultUI: true,
+      styles: [{
+            "featureType": "all",
+            "elementType": "labels.text.fill",
+            "stylers": [{
+                "saturation": 36
+            }, {
+                "color": "#000000"
+            }, {
+                "lightness": 40
+            }]
+        }, {
+            "featureType": "all",
+            "elementType": "labels.text.stroke",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#000000"
+            }, {
+                "lightness": 16
+            }]
+        }, {
+            "featureType": "all",
+            "elementType": "labels.icon",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "administrative",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 20
+            }]
+        }, {
+            "featureType": "administrative",
+            "elementType": "geometry.stroke",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 17
+            }, {
+                "weight": 1.2
+            }]
+        }, {
+            "featureType": "administrative",
+            "elementType": "labels",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "administrative.country",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "simplified"
+            }]
+        }, {
+            "featureType": "administrative.country",
+            "elementType": "geometry",
+            "stylers": [{
+                "visibility": "simplified"
+            }]
+        }, {
+            "featureType": "administrative.country",
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "simplified"
+            }]
+        }, {
+            "featureType": "administrative.province",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "administrative.locality",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "simplified"
+            }, {
+                "saturation": "-100"
+            }, {
+                "lightness": "30"
+            }]
+        }, {
+            "featureType": "administrative.neighborhood",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "administrative.land_parcel",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "landscape",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "simplified"
+            }, {
+                "gamma": "0.00"
+            }, {
+                "lightness": "74"
+            }]
+        }, {
+            "featureType": "landscape",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 20
+            }]
+        }, {
+            "featureType": "landscape.man_made",
+            "elementType": "all",
+            "stylers": [{
+                "lightness": "3"
+            }]
+        }, {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 21
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{
+                "visibility": "simplified"
+            }]
+        }, {
+            "featureType": "road.highway",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 17
+            }]
+        }, {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 29
+            }, {
+                "weight": 0.2
+            }]
+        }, {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 18
+            }]
+        }, {
+            "featureType": "road.local",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 16
+            }]
+        }, {
+            "featureType": "transit",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 19
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#000000"
+            }, {
+                "lightness": 17
+            }]
+        }]
+    };
+    
+
+
     var centerControlDiv = document.createElement('div');
     var centerControl = new CenterControl(centerControlDiv, map);
 
@@ -47,17 +285,21 @@ function initMap()
 	});
 	window.map = map;  // for debugging/exploratory use in console
 	window.oms = oms;
-	var legend = document.getElementById('legend');
-	for (var key in icons) {
-		var type = icons[key];
-		var name = type.name;
-		var icon = type.icon;
-		var div = document.createElement('div');
-		div.innerHTML = '<img src="' + icon + '"> ' + name;
-		legend.appendChild(div);
-	}
-
-
+	var styles = {
+        default: null,
+        hide: [
+          {
+            featureType: 'poi.business',
+            stylers: [{visibility: 'off'}]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'labels.icon',
+            stylers: [{visibility: 'off'}]
+          }
+        ]
+      };
+	 map.setOptions({styles: styles['hide']});
 }
 
 function rgb2hex(r, g, b)
@@ -66,15 +308,35 @@ function rgb2hex(r, g, b)
 	return '#'+('0'+r.toString(16)).slice(-2)+('0'+g.toString(16)).slice(-2)+('0'+b.toString(16)).slice(-2);
 }
 
+function ajouter_legend(list_icons=icons)
+{
+	var legend = document.getElementById('legend_2');
+	for (var key in icons) {
+		var type = icons[key];
+		var name = type.name;
+		var icon = type.icon;
+		var div = document.createElement('div');
+		div.innerHTML = '<img src="' + icon + '"style="width :15%;height:15%;"> ' + name;
+		legend.appendChild(div);
+	}
+}
 /*Fonction qui prend en entrée les geoj insérer sur la carte et qui en fait des cluster si ce sont des stations et sinon des markers tout cours avec des icones de compet pour ma chérie*/
 function ajouter_carte_point(map, e)
 {
 	var icon;
-	icon = {url:"https://icons8.com/icon/13526/schedule",
+
+	icon = {
+		url:"https://icons8.com/icon/13526/schedule",
 		scaledSize: new google.maps.Size(30, 30), // scaled size
     	origin: new google.maps.Point(0,0), // origin
-    	anchor: new google.maps.Point(0, 0)} // anchor
-	var marker = new google.maps.Marker({position: {lat: e.geometry.coordinates[1], lng: e.geometry.coordinates[0]},});	
+    	anchor: new google.maps.Point(0, 0)
+	}; // anchor
+
+	var marker = new google.maps.Marker({
+		position: {lat: e.geometry.coordinates[1],
+		lng: e.geometry.coordinates[0]}
+	});	
+
 	if(e.properties.TYPE_EVENT == "Theatre")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/theatre-mask.png",
@@ -234,8 +496,35 @@ function ajouter_carte_ligne(map,e)
         ligne.setMap(map);
 }
 
+function ajouter_carte_multi_ligne(map,e)
+{
+	
+	for (var i = 0; i < e.geometry.coordinates.length; i++) {
+		var une_ligne = e.geometry.coordinates[i];
+		var ligne = [];
+		for (var j = 0; j <une_ligne.length; j++) {
+			
+			ligne.push({lat : une_ligne[j][1],
+						lng : une_ligne[j][0]
+			});
+			
+		}
+		var ligne = new google.maps.Polyline({
+			path: ligne,
+			geodesic: true,
+			strokeColor: rgb2hex(e.properties.Red,e.properties.Green,e.properties.Bue),
+			strokeOpacity: 1.0,
+			strokeWeight:3
+		});
+
+		ligne.setMap(map);
+	}	
+}
+
 function load_geoj(geoj)
 {
+	console.log(geoj)
+	var point = false;
 	var departements = {};
 	var event = {};
 	var date = {mois:monthNames,valeurs:Array(12).fill(0)};
@@ -250,10 +539,20 @@ function load_geoj(geoj)
 			stats_type_events(e,event);
 			stats_mois(e,date);
 			stats_transports(e,transports);
+			if(!chargement_donnee)
+			{
+				ajouter_legend()
+				chargement_donnee = true;
+			}
+			point=true;			
 		}
 		if(e.geometry.type == "LineString")
 		{
 			ajouter_carte_ligne(map,e);
+		}	
+		if(e.geometry.type == "MultiLineString")
+		{
+			ajouter_carte_multi_ligne(map,e);
 		}			
 	});
 
@@ -270,18 +569,18 @@ function load_geoj(geoj)
 
 	console.log(date)
 	console.log(transports)
+	if(point)
+	{
+		var ctx1 = document.getElementById('canvas1').getContext('2d');	
+		var ctx2 = document.getElementById('canvas2').getContext('2d');
+		var ctx3 = document.getElementById('canvas3').getContext('2d');	
+		var ctx4 = document.getElementById('canvas4').getContext('2d');				
 
-
-
-	var ctx1 = document.getElementById('canvas1').getContext('2d');	
-	var ctx2 = document.getElementById('canvas2').getContext('2d');
-	var ctx3 = document.getElementById('canvas3').getContext('2d');	
-	var ctx4 = document.getElementById('canvas4').getContext('2d');				
-
-	display_stat_bar(ctx1,Object.values(departements),Object.getOwnPropertyNames(departements),"Nombre d'events par département",'','green');
-	display_stat_curve(ctx2,date.valeurs,date.mois,"Nombre d'events par mois");
-	display_stat_bar(ctx3,Object.values(event),Object.getOwnPropertyNames(event),"Nombre d'events par type");
-	display_stat_doughnut(ctx4,Object.values(transports),Object.getOwnPropertyNames(transports),"Nombre de stations par type de transport");
+		display_stat_bar(ctx1,Object.values(departements),Object.getOwnPropertyNames(departements),"Nombre d'events par département",'','green');
+		display_stat_curve(ctx2,date.valeurs,date.mois,"Nombre d'events par mois");
+		display_stat_bar(ctx3,Object.values(event),Object.getOwnPropertyNames(event),"Nombre d'events par type");
+		display_stat_doughnut(ctx4,Object.values(transports),Object.getOwnPropertyNames(transports),"Nombre de stations par type de transport");
+	}	
 }
 
 function dropHandler(ev)
@@ -584,6 +883,10 @@ function CenterControl(controlDiv, map)
 
     // Setup the click event listeners: simply set the map to Chicago.
     controlUI.addEventListener('click', function() {
-		request_geojson();
+		if(!chargement_donnee)
+			{
+				request_geojson();
+				
+			}
     });
 }
