@@ -1,0 +1,70 @@
+#map {
+            position: absolute;
+            width: 65%;
+            height: 100%;
+            z-index: 2;
+          }
+
+        html, body {
+            height: 100vh;
+            width: : 100vw;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://www.riantec-oc.fr/wp-content/uploads/2016/01/Website-Background.jpg");
+            background-size: cover;
+           }
+          canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+
+            max-width: 470px;
+          }
+          
+          .container
+          {
+            position: relative;
+            height: 25%;
+            width: 95%;
+          }
+          #container_1
+          {
+            background-color: rgba(255,255,255,.75);
+            position: absolute;
+            font-family: 'Nunito Sans', sans-serif;
+            color: white;
+            font-size: 100%;
+            height: 100%;
+            width: 35%;
+            left: 65%;
+            margin: 0;
+            z-index: 5;
+            justify-content: space-between;
+          }
+           #container_
+          {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            justify-content: space-around;
+          }
+          #legend {
+            font-family: 'Nunito Sans', sans-serif;
+            background: rgba(255,255,255,.75);
+            border-radius: 25px;
+            border: 3px solid #000;
+            z-index: 6;
+            width: 10%;
+            position: absolute;
+            left: 54%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 0.6vw;
+
+          }
+          #legend img {
+            vertical-align: middle;
+          }
