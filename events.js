@@ -6,6 +6,7 @@ const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
 	];
 var chargement_donnee = false;
 var om;
+//https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/
 var metro = [];
 var icon_displayed=[];
 var icons = {
@@ -71,7 +72,7 @@ var icons = {
 
 
 
-//<script src="https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/events.js"></script>
+//
 
 /*Création de la carte définie par Google Maps*/
 function initMap() 
@@ -332,7 +333,7 @@ function ajouter_carte_point(map, e)
 
 	icon = {
 		url:"https://icons8.com/icon/13526/schedule",
-		scaledSize: new google.maps.Size(20, 20), // scaled size
+		scaledSize: new google.maps.Size(15, 15), // scaled size
     	origin: new google.maps.Point(0,0), // origin
     	anchor: new google.maps.Point(0, 0)
 	}; // anchor
@@ -345,21 +346,21 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Theatre")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/theatre-mask.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
 	if(e.properties.TYPE_EVENT == "Cinema")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/documentary.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
 	if(e.properties.TYPE_EVENT == "Concert/Musique")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/saxophone.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -367,7 +368,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Congres/Conference")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/micro.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -375,28 +376,28 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Famille")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/family.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
 	if(e.properties.TYPE_EVENT == "Atelier")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/drafting-compass2.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
 	if(e.properties.TYPE_EVENT == "Culture")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/books.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
 	if(e.properties.TYPE_EVENT == "Formation")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/classroom.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -404,7 +405,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Religion")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/cologne-cathedral.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -412,7 +413,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Restau/Bar")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/dining-room.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -420,7 +421,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "TV")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/retro-tv.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -428,7 +429,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Sport")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/rugby.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
@@ -436,7 +437,7 @@ function ajouter_carte_point(map, e)
 	if(e.properties.TYPE_EVENT == "Vente")
 	{
 		icon = {url:"https://img.icons8.com/color/48/000000/cash-in-hand.png",
-			scaledSize: new google.maps.Size(20, 20), // scaled size
+			scaledSize: new google.maps.Size(15, 15), // scaled size
     		origin: new google.maps.Point(0,0), // origin
     		anchor: new google.maps.Point(0, 0)} // anchor
 	}
