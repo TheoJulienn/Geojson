@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport">
-    <title>Evenements IDF</title>
+    <title>Tableau de bord des évènements franciliens pour l'année 2019</title>
     <style>
         #map {
             position: absolute;
@@ -24,8 +24,8 @@
             -moz-user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
-            max-height: 386px;
-            max-width: 773px;
+            max-height: 319px;
+            max-width: 639px;
           }
           
           .container
@@ -69,16 +69,15 @@
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
-            font-size: vw;
+            font-size: 0.6vw;
 
           }
           #legend img {
             vertical-align: middle;
           }
-
-
     </style>
-    <script src="events.js"></script>
+    <link rel="icon" href="https://img.icons8.com/office/16/000000/calendar.png">
+    <script src="https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/events.js"></script>
     <script type="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
@@ -93,6 +92,7 @@
     <div id="legend">
       <h3>Legend</h3> 
       <div id ="legend_2" style="width: 75%">
+
       
       </div>
     </div>

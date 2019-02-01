@@ -4,11 +4,10 @@ var infowindow_open = [];
 const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
 	  "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"
 	];
-
 var chargement_donnee = false;
-
 var om;
-
+var metro = [];
+var icon_displayed=[];
 var icons = {
 
   Theatre: {
@@ -66,6 +65,12 @@ var icons = {
 
 };
 
+
+
+
+
+
+
 //<script src="https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/events.js"></script>
 
 /*Création de la carte définie par Google Maps*/
@@ -75,7 +80,7 @@ function initMap()
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
       center: paris,
-      mapTypeId : "roadmap",
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true,
       styles: [{
             "featureType": "all",
@@ -268,8 +273,8 @@ function initMap()
                 "lightness": 17
             }]
         }]
-    };
-    
+    });
+
 
 
     var centerControlDiv = document.createElement('div');
@@ -299,7 +304,7 @@ function initMap()
           }
         ]
       };
-	 map.setOptions({styles: styles['hide']});
+	 //map.setOptions({styles: styles['hide']});
 }
 
 function rgb2hex(r, g, b)
@@ -470,7 +475,8 @@ function ajouter_carte_point(map, e)
 		
 		infowindow_open.push(infowindow);
 	});
-	oms.addMarker(marker);   					   				
+	oms.addMarker(marker); 
+	icon_displayed.push(marker); 					   				
 }
 
 function ajouter_carte_ligne(map,e)
@@ -482,9 +488,6 @@ function ajouter_carte_ligne(map,e)
 					lng : e.geometry.coordinates[i][0]
 				});
 	}
-
-		
-
 	var ligne = new google.maps.Polyline({
           path: ligne,
           geodesic: true,
@@ -496,34 +499,49 @@ function ajouter_carte_ligne(map,e)
         ligne.setMap(map);
 }
 
-function ajouter_carte_multi_ligne(map,e)
+function ajouter_carte_multi_ligne(map,e,color = "false")
 {
-	
+	var ligne = {}
+
 	for (var i = 0; i < e.geometry.coordinates.length; i++) {
 		var une_ligne = e.geometry.coordinates[i];
-		var ligne = [];
+		var lignes = [];
 		for (var j = 0; j <une_ligne.length; j++) {
 			
-			ligne.push({lat : une_ligne[j][1],
+			lignes.push({lat : une_ligne[j][1],
 						lng : une_ligne[j][0]
 			});
 			
 		}
-		var ligne = new google.maps.Polyline({
-			path: ligne,
-			geodesic: true,
-			strokeColor: rgb2hex(e.properties.Red,e.properties.Green,e.properties.Bue),
-			strokeOpacity: 1.0,
-			strokeWeight:3
-		});
-
-		ligne.setMap(map);
-	}	
+		if(typeof e.properties.Red === 'undefined')
+		{
+			ligne = new google.maps.Polyline({
+				path: lignes,
+				geodesic: true,
+				strokeColor: "brown",
+				strokeOpacity: 0.50,
+				strokeWeight:3
+			});
+			metro.push(ligne)
+		}
+		else{
+			ligne = new google.maps.Polyline({
+				path: lignes,
+				geodesic: true,
+				strokeColor: rgb2hex(e.properties.Red,e.properties.Green,e.properties.Bue),
+				strokeOpacity: 0.5,
+				strokeWeight:4,
+				nom : e.properties.NOMLIG
+			});
+			ligne.setMap(map)
+		}
+		
+	}
 }
 
 function load_geoj(geoj)
 {
-	console.log(geoj)
+
 	var point = false;
 	var departements = {};
 	var event = {};
@@ -555,20 +573,32 @@ function load_geoj(geoj)
 			ajouter_carte_multi_ligne(map,e);
 		}			
 	});
+	if(metro.length>1)
+	{
+		for (var i = 0; i < metro.length; i++) {
+			metro[i].setMap(map);
+			metro[i].setVisible(false);
+		}
+		map.addListener('zoom_changed', function() {
+			if(map.zoom<14)
+			{
+				for (var i = 0; i < metro.length; i++) {
+					metro[i].setVisible(false);
+				}	
+			}
+			else{
+				for (var i = 0; i < metro.length; i++) {
+					metro[i].setVisible(true);
+				}	
+			}		
+		});
+	}
 
-	/*
-	liste_villes.sort(function(a, b){
-		if(a < b) { return -1; }
-		if(a > b) { return 1; }
-		return 0;
-	})
-	*/
-	console.log(departements)
+
+	
+
 	delete event.cin;
-	console.log(event)
 
-	console.log(date)
-	console.log(transports)
 	if(point)
 	{
 		var ctx1 = document.getElementById('canvas1').getContext('2d');	
@@ -578,7 +608,7 @@ function load_geoj(geoj)
 
 		display_stat_bar(ctx1,Object.values(departements),Object.getOwnPropertyNames(departements),"Nombre d'events par département",'','green');
 		display_stat_curve(ctx2,date.valeurs,date.mois,"Nombre d'events par mois");
-		display_stat_bar(ctx3,Object.values(event),Object.getOwnPropertyNames(event),"Nombre d'events par type");
+		display_stat_horizontal_bar(ctx3,Object.values(event),Object.getOwnPropertyNames(event),"Nombre d'events par type",'','purple');
 		display_stat_doughnut(ctx4,Object.values(transports),Object.getOwnPropertyNames(transports),"Nombre de stations par type de transport");
 	}	
 }
@@ -727,6 +757,68 @@ function display_stat_bar(ctx,dataset,labels,nom_='',def_= '',couleur ='red')
 	window.myLine = new Chart(ctx, config);
 }
 
+function display_stat_horizontal_bar(ctx,dataset,labels,nom_='',def_= '',couleur ='red')
+{
+	var clr;
+	var color = Chart.helpers.color;
+	if(couleur =='red')
+	{
+		clr =  color(window.chartColors.red);
+	}
+	if(couleur=='blue')
+	{
+		clr =  color(window.chartColors.blue);	
+	}
+	if(couleur=='green')
+	{
+		clr =  color(window.chartColors.green);	
+	}
+	if(couleur=='yellow')
+	{
+		clr =  color(window.chartColors.yellow);	
+	}
+	if(couleur=='purple')
+	{
+		clr =  color(window.chartColors.purple);	
+	}
+
+	console.log("display");
+	
+	var barChartData = {
+		labels: labels,
+		datasets: [{
+			label: def_,
+			backgroundColor: clr.alpha(0.5).rgbString(),
+			borderColor: clr,
+			borderWidth: 1,
+			data: dataset
+		}]
+	};
+	var config ={
+				type: 'horizontalBar',
+				data: barChartData,
+				options: {
+					// Elements options apply to all of the options unless overridden in a dataset
+					// In this case, we are setting the border of each horizontal bar to be 2px wide
+					elements: {
+						rectangle: {
+							borderWidth: 2,
+						}
+					},
+					responsive: true,
+					legend: {
+						position: 'right',
+						display: false
+					},
+					title: {
+						display: true,
+						text: nom_
+					}
+				}
+			}
+	window.myLine = new Chart(ctx, config);
+}
+
 function display_stat_doughnut(ctx,dataset,labels,nom_='',def_= '')
 {
 	var colorNames = Object.keys(window.chartColors);
@@ -766,6 +858,51 @@ function display_stat_doughnut(ctx,dataset,labels,nom_='',def_= '')
 		};
 
 		window.myLine = new Chart(ctx, config);
+}
+
+function display_stat_polar(ctx,dataset,labels,nom_='',def_= '')
+{
+	var colorNames = Object.keys(window.chartColors);
+	
+	var color = [];
+	for (var i = 0; i <dataset.length; i++) {
+		var colorName = colorNames[i % colorNames.length];
+		color.push(window.chartColors[colorName])
+	}
+	console.log(color)
+	var data = {
+				datasets: [{
+					data: dataset,
+					backgroundColor:color,
+					label: def_
+				}],
+				labels: labels
+			}
+	var config = {
+			data: data,
+			options: {
+				responsive: true,
+				legend: {
+					position: 'right',
+				},
+				title: {
+					display: true,
+					text: 'nom_',
+				},
+				scale: {
+					ticks: {
+						beginAtZero: true
+					},
+					reverse: false
+				},
+				animation: {
+					animateRotate: false,
+					animateScale: true
+				}
+			}
+		};
+
+		window.myLine = Chart.PolarArea(ctx, config);
 }
 
 function display_stat_curve(ctx,dataset,labels,nom_='',def_= '')
@@ -812,11 +949,21 @@ function display_stat_curve(ctx,dataset,labels,nom_='',def_= '')
 function request_geojson()
 {
 
-  var URL = "https://cdn.rawgit.com/TheoJulienn/Geojson/master/events.geojson"
-  makeAjaxCall(URL, "GET").then(function(resp){
-    console.log(resp);
-    load_geoj(resp);
-  }, errorHandler);
+	var URL1 = "https://cdn.rawgit.com/TheoJulienn/Geojson/master/events.geojson"
+	var URL2 = "https://cdn.rawgit.com/TheoJulienn/Geojson/master/metro.geojson"
+	var URL3 = "https://cdn.rawgit.com/TheoJulienn/Geojson/master/rer_lines.geojson"
+	makeAjaxCall(URL1, "GET").then(function(resp){
+
+		load_geoj(resp);
+	}, errorHandler);
+	makeAjaxCall(URL2, "GET").then(function(resp){
+
+		load_geoj(resp);
+	}, errorHandler);
+	makeAjaxCall(URL3, "GET").then(function(resp){
+
+		load_geoj(resp);
+	}, errorHandler);
 }
 
 function makeAjaxCall(url, methodType = "GET")
@@ -890,3 +1037,4 @@ function CenterControl(controlDiv, map)
 			}
     });
 }
+
