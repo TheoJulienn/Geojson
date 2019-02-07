@@ -605,7 +605,8 @@ function load_geoj(geoj)
 		var ctx1 = document.getElementById('canvas1').getContext('2d');	
 		var ctx2 = document.getElementById('canvas2').getContext('2d');
 		var ctx3 = document.getElementById('canvas3').getContext('2d');	
-		var ctx4 = document.getElementById('canvas4').getContext('2d');				
+		var ctx4 = document.getElementById('canvas4').getContext('2d');	
+		console.log(date);
 
 		display_stat_bar(ctx1,Object.values(departements),Object.getOwnPropertyNames(departements),"Nombre d'events par département",'','green');
 		display_stat_curve(ctx2,date.valeurs,date.mois,"Nombre d'events par mois");
