@@ -8,6 +8,9 @@ var chargement_donnee = false;
 var om;
 //https://cdn.jsdelivr.net/gh/TheoJulienn/Geojson/
 var metro = [];
+var d2018= 0;
+var d2019= 0;
+var dNaN = 0;
 var icon_displayed=[];
 var icons = {
 
@@ -574,6 +577,7 @@ function load_geoj(geoj)
 			ajouter_carte_multi_ligne(map,e);
 		}			
 	});
+	console.log(date);
 	if(metro.length>1)
 	{
 		for (var i = 0; i < metro.length; i++) {
@@ -606,7 +610,7 @@ function load_geoj(geoj)
 		var ctx2 = document.getElementById('canvas2').getContext('2d');
 		var ctx3 = document.getElementById('canvas3').getContext('2d');	
 		var ctx4 = document.getElementById('canvas4').getContext('2d');	
-		console.log(date);
+		
 
 		display_stat_bar(ctx1,Object.values(departements),Object.getOwnPropertyNames(departements),"Nombre d'events par département",'','green');
 		display_stat_curve(ctx2,date.valeurs,date.mois,"Nombre d'events par mois");
@@ -690,10 +694,23 @@ function stats_transports(feature,transports)
 
 function stats_mois(feature,mois)
 {
-	var debut = new Date(feature.properties.DATE_START);
-	var fin = new Date(feature.properties.DATE_END);
+	var debut_split = feature.properties.DATE_START.split('/');
+	var fin_split = feature.properties.DATE_END.split('/');
+	var debut = new Date(debut_split[2],debut_split[1],debut_split[0]);
+	var fin = new Date(fin_split[2],fin_split[1],fin_split[0]);
 	var m_d = debut.getMonth();
 	var m_f = fin.getMonth();
+	
+	
+	if(debut.getYear()+1900 == 2019)
+	{
+		d2019 +=1;
+	}
+	if(isNaN(debut.getYear()+1900))
+	{
+		dNaN +=1;
+	}
+
 
 	if(m_d!=m_f)
 	{
@@ -1039,4 +1056,3 @@ function CenterControl(controlDiv, map)
 			}
     });
 }
-
